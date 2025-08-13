@@ -28,7 +28,7 @@ Before using the CLI, ensure you have:
 
 1. **Navigate to the CLI directory**:
    ```bash
-   cd ~/Music/Tibeb-Nest-Auth
+   cd /Tibeb-Nest-Auth
    ```
 
 2. **Install dependencies**:
@@ -58,7 +58,6 @@ Before using the CLI, ensure you have:
 1. **Navigate to your NestJS project**:
    If you don’t have a NestJS project, create one:
    ```bash
-   cd ~/Desktop/NewFolder
    nest new auth
    cd auth
    ```
@@ -101,34 +100,7 @@ Before using the CLI, ensure you have:
    ```bash
    cat src/auth/dto/register.dto.ts
    ```
-   Example content:
-   ```
-   import { IsString, IsEmail, MinLength, IsOptional, IsNotEmpty } from 'class-validator';
-
-   export class RegisterDto {
-     @IsNotEmpty()
-     @IsString()
-     @IsEmail()
-     email: string;
-
-     @IsNotEmpty()
-     @IsString()
-     @MinLength(8)
-     password: string;
-
-     @IsOptional()
-     @IsString()
-     username: string;
-
-     @IsOptional()
-     @IsString()
-     firstName: string;
-
-     @IsOptional()
-     @IsString()
-     lastName: string;
-   }
-   ```
+   
 
 ## Setting Up the NestJS Project
 
@@ -156,171 +128,18 @@ Before using the CLI, ensure you have:
    mysql -u root -p -e "CREATE DATABASE tibeb_auth_db;"
    ```
 
-3. **Set up JWT secret**:
-   Create a `.env` file:
-   ```bash
-   nano .env
-   ```
-   Add:
-   ```
-   JWT_SECRET=your-secure-secret-key
-   ```
-   Install `dotenv`:
-   ```bash
-   npm install dotenv
-   ```
-   Update `src/main.ts`:
-   ```typescript
-   import { config } from 'dotenv';
-   config();
-   ```
-
-4. **Install project dependencies**:
+3. **Install project dependencies**:
    ```bash
    npm install
    ```
 
-5. **Start the NestJS application**:
+4. **Start the NestJS application**:
    ```bash
    npm run start:dev
    ```
    The app runs on `http://localhost:3000`.
 
-## Testing Routes in Postman
 
-The CLI generates routes like `/user/signup`, `/user/login`, and optional routes like `/user/forgot-password`. Use Postman to test them.
-
-1. **Set up Postman**:
-   - Open Postman and create a new collection named “Tibeb-Nest-Auth”.
-   - Create an environment named “Tibeb-Nest-Auth-Dev” with a variable:
-     - Key: `baseUrl`
-     - Value: `http://localhost:3000`
-
-2. **Test `POST /user/signup`**:
-   - Create a new request named “User Signup”.
-   - Method: `POST`
-   - URL: `{{baseUrl}}/user/signup`
-   - Headers:
-     ```
-     Content-Type: application/json
-     ```
-   - Body (raw, JSON):
-     ```json
-     {
-       "email": "test@example.com",
-       "password": "password123",
-       "username": "testuser",
-       "firstName": "Test",
-       "lastName": "User"
-     }
-     ```
-   - Click “Send”. Expected: `201 Created` with user details.
-   - Save the request.
-
-3. **Test `POST /user/login`**:
-   - Create a new request named “User Login”.
-   - Method: `POST`
-   - URL: `{{baseUrl}}/user/login`
-   - Headers:
-     ```
-     Content-Type: application/json
-     ```
-   - Body:
-     ```json
-     {
-       "email": "test@example.com",
-       "password": "password123"
-     }
-     ```
-   - Tests (to save token):
-     ```javascript
-     const response = pm.response.json();
-     if (response.access_token) {
-       pm.environment.set("userToken", response.access_token);
-     }
-     ```
-   - Click “Send”. Expected: `200 OK` with `{ "access_token": "..." }`.
-   - Save the request.
-
-4. **Test `POST /user/forgot-password` (if enabled)**:
-   - Create a new request named “User Forgot Password”.
-   - Method: `POST`
-   - URL: `{{baseUrl}}/user/forgot-password`
-   - Headers:
-     ```
-     Content-Type: application/json
-     ```
-   - Body:
-     ```json
-     {
-       "email": "test@example.com"
-     }
-     ```
-   - Click “Send”. Expected: `200 OK` with `{ "message": "Password reset email sent" }`.
-
-5. **Test admin routes (if `authType: both` or `admin`)**:
-   - Create “Admin Signup” and “Admin Login” requests (similar to user routes).
-   - For `POST /admin/users`:
-     - URL: `{{baseUrl}}/admin/users`
-     - Headers:
-       ```
-       Content-Type: application/json
-       Authorization: Bearer {{userToken}}
-       ```
-     - Body: `{}`
-     - Expected: `200 OK` with a list of users.
-
-## Troubleshooting
-
-- **CLI command not found**:
-  ```bash
-  tibeb-nest-auth: No such file or directory
-  ```
-  Fix by re-linking:
-  ```bash
-  cd ~/Music/Tibeb-Nest-Auth
-  npm link
-  ```
-  Or manually create the symlink:
-  ```bash
-  ln -sf ~/Music/Tibeb-Nest-Auth/dist/index.js /home/$USER/.nvm/versions/node/v24.4.0/bin/tibeb-nest-auth
-  chmod +x /home/$USER/.nvm/versions/node/v24.4.0/bin/tibeb-nest-auth
-  ```
-
-- **Build errors**:
-  Check `tsconfig.json`:
-  ```json
-  {
-    "compilerOptions": {
-      "target": "es2016",
-      "module": "commonjs",
-      "outDir": "./dist",
-      "esModuleInterop": true,
-      "forceConsistentCasingInFileNames": true,
-      "strict": true,
-      "skipLibCheck": true
-    },
-    "include": ["src/**/*", "src/types/declarations/**/*"],
-    "exclude": ["node_modules"]
-  }
-  ```
-  Rebuild:
-  ```bash
-  npm run clean
-  npm run build
-  ```
-
-- **Database errors**:
-  Verify MySQL is running:
-  ```bash
-  sudo systemctl status mysql
-  ```
-  Check credentials in `app.module.ts`.
-
-- **Postman errors**:
-  - `404 Not Found`: Ensure the feature (e.g., `forgot-password`) was selected.
-  - `400 Bad Request`: Check the request body against `src/auth/dto/register.dto.ts`.
-  - `401 Unauthorized`: Use a valid `userToken` in the `Authorization` header.
 
 ## Support
 
