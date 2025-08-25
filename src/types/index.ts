@@ -8,7 +8,7 @@ export const defaultFields = [
 
 export const availableFeatures = [
   'forgot-password',
-  'reset-password',
+  'atication',
   'otp-email',
   'two-step-verification',
   'delete-account',
@@ -33,9 +33,9 @@ export interface Answers {
   loginIdentifiers: string[];
   autoDetectLogin: boolean;
   authType: 'user' | 'admin' | 'both';
-  otpDelivery?: 'sms' | 'email' | 'both';
+  otpDelivery?: 'email';
   packageManager: 'npm' | 'yarn' | 'pnpm';
-  confirm: boolean; // Added to fix TS2339
+  confirm: boolean;
 }
 
 export interface Config {
@@ -45,5 +45,5 @@ export interface Config {
   packageManager: 'npm' | 'yarn' | 'pnpm';
   autoDetectLogin: boolean;
   authType: 'user' | 'admin' | 'both';
-  otpDelivery: 'sms' | 'email' | 'both';
+  otpDelivery: 'email';
 }

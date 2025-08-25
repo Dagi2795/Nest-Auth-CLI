@@ -8,16 +8,16 @@ export class Otp {
   id: number;
 
   @Column()
+  email: string;
+
+  @Column()
   code: string;
 
   @Column()
-  userId: number;
-
-  @Column()
-  deliveryMethod: string;
-
-  @Column()
   expiresAt: Date;
+
+  @Column({ default: false })
+  used: boolean;
 
   @CreateDateColumn()
   createdAt: Date;

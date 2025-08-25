@@ -34,7 +34,7 @@ export class UsersController {
     return this.usersService.update(userId, updateUserDto);
   }
 
-  ${config.features.includes('delete-account') ? `
+${config.features.includes('delete-account') ? `
   @UseGuards(JwtAuthGuard)
   @Delete('me')
   async deleteAccount(@Request() req) {
@@ -45,7 +45,7 @@ export class UsersController {
     return this.usersService.delete(userId);
   }` : ''}
 
-  ${config.features.includes('history-tracking') && (config.authType === 'user' || config.authType === 'both') ? `
+${config.features.includes('history-tracking') && (config.authType === 'user' || config.authType === 'both') ? `
   @UseGuards(JwtAuthGuard)
   @Get('history')
   async getHistory(@Request() req) {

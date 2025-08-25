@@ -10,9 +10,8 @@ import { Controller, Post, Body, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-${config.features.includes('forgot-password') ? `import { ForgotPasswordDto } from './dto/forgot-password.dto';` : ''}
-${config.features.includes('reset-password') ? `import { ResetPasswordDto } from './dto/reset-password.dto';` : ''}
-${config.features.includes('otp-email') || config.features.includes('two-step-verification') ? `import { VerifyOtpDto } from './dto/verify-otp.dto';` : ''}
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 ${config.authType !== 'user' ? `import { RolesGuard } from './roles.guard';
 import { Roles } from './roles.decorator';` : ''}
@@ -27,9 +26,19 @@ ${hasUserRoutes ? `
     return this.authService.register(registerDto);
   }
 
+  @Post('${userPrefix}/verify-signup')
+  async verifySignup(@Body('email') email: string, @Body('code') code: string, @Body('registerDto') registerDto: RegisterDto) {
+    return this.authService.verifyAndCompleteRegistration(email, code, registerDto);
+  }
+
   @Post('${userPrefix}/login')
   async login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
+  }
+
+  @Post('${userPrefix}/verify-2fa-login')
+  async verify2faLogin(@Body('userId') userId: number, @Body('code') code: string) {
+    return this.authService.verify2faLogin(userId, code);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -53,13 +62,13 @@ ${config.features.includes('reset-password') ? `
 ${config.features.includes('two-step-verification') ? `
   @UseGuards(JwtAuthGuard)
   @Post('${userPrefix}/2fa')
-  async enable2fa(@Request() req, @Body('deliveryMethod') deliveryMethod: 'sms' | 'email') {
+  async enable2fa(@Request() req, @Body('deliveryMethod') deliveryMethod: 'email') {
     return this.authService.enable2fa(req.user, deliveryMethod);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('${userPrefix}/2fa/verify')
-  async verify2fa(@Body() verifyOtpDto: VerifyOtpDto) {
+  async verify2fa(@Body() verifyOtpDto: { email: string; otp: string }) {
     return this.authService.verify2fa(verifyOtpDto);
   }
 
@@ -76,6 +85,13 @@ ${hasAdminRoutes && config.authType !== 'user' ? `
   @Post('${adminPrefix}/signup')
   async adminSignup(@Body() registerDto: RegisterDto) {
     return this.authService.registerAdmin(registerDto);
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles('admin')
+  @Post('${adminPrefix}/verify-signup')
+  async verifyAdminSignup(@Body('email') email: string, @Body('code') code: string, @Body('registerDto') registerDto: RegisterDto) {
+    return this.authService.verifyAndCompleteAdminRegistration(email, code, registerDto);
   }
 
   @Post('${adminPrefix}/login')

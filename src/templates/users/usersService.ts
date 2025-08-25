@@ -57,6 +57,7 @@ export class UsersService {
     const user = this.usersRepository.create({
       ...createUserDto,
       password: hashedPassword,
+      twoFactorEnabled: false,
     });
     const savedUser = await this.usersRepository.save(user);
     const history = this.userHistoryRepository.create({
@@ -94,6 +95,7 @@ export class UsersService {
       ...createUserDto,
       password: hashedPassword,
       roles: [adminRole],
+      twoFactorEnabled: false,
     });
     const savedUser = await this.usersRepository.save(user);
     const history = this.userHistoryRepository.create({

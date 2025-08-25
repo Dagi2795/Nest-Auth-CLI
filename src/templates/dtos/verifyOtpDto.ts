@@ -1,13 +1,13 @@
 export default function generateVerifyOtpDto(): string {
   return `
-import { IsString, IsNumber } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class VerifyOtpDto {
   @IsString()
-  otp: string;
+  email: string;
 
-  @IsNumber()
-  userId: number;
+  @IsString()
+  otp: string;
 }
 `;
 }

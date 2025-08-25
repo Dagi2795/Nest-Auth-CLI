@@ -28,7 +28,7 @@ export async function generateFiles(config: Config) {
     { path: 'auth/dto/login.dto.ts', content: generators.generateLoginDto(config) },
     ...(config.features.includes('forgot-password') ? [{ path: 'auth/dto/forgot-password.dto.ts', content: generators.generateForgotPasswordDto() }] : []),
     ...(config.features.includes('reset-password') ? [{ path: 'auth/dto/reset-password.dto.ts', content: generators.generateResetPasswordDto() }] : []),
-    ...(config.features.includes('otp-email') || config.features.includes('two-step-verification') ? [{ path: 'auth/dto/verify-otp.dto.ts', content: generators.generateVerifyOtpDto() }] : []),
+    ...(config.features.includes('two-step-verification') || config.features.includes('otp-email') ? [{ path: 'auth/dto/verify-otp.dto.ts', content: generators.generateVerifyOtpDto() }] : []),
     { path: 'users/users.module.ts', content: generators.generateUsersModule(config) },
     { path: 'users/users.controller.ts', content: generators.generateUsersController(config) },
     { path: 'users/users.service.ts', content: generators.generateUsersService(config) },

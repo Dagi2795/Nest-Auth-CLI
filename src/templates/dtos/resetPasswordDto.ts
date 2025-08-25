@@ -1,3 +1,4 @@
+
 export default function generateResetPasswordDto(): string {
   return `
 import { IsString, MinLength } from 'class-validator';
@@ -7,7 +8,7 @@ export class ResetPasswordDto {
   token: string;
 
   @IsString()
-  @MinLength(8)
+  @MinLength(6)
   newPassword: string;
 }
 `;

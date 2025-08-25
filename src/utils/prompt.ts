@@ -88,7 +88,7 @@ export async function promptConfig(): Promise<Config> {
       type: 'list',
       name: 'otpDelivery',
       message: 'Select OTP delivery method',
-      choices: ['sms', 'email', 'both'],
+      choices: ['email'],
       default: 'email',
       when: (answers: Answers) => answers.features.includes('otp-email') || answers.features.includes('two-step-verification'),
     },

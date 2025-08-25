@@ -7,10 +7,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { OtpController } from './otp.controller';
 import { OtpService } from './otp.service';
 import { Otp } from './otp.entity';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Otp])],
-  controllers: ${(config.authType === 'user' || config.authType === 'both') ? '[OtpController]' : '[]'},
+  imports: [TypeOrmModule.forFeature([Otp]), MailerModule],
+  controllers: [OtpController],
   providers: [OtpService],
   exports: [OtpService],
 })
