@@ -1,4 +1,3 @@
-
 export default function generateResetPasswordDto(): string {
   return `
 import { IsString, MinLength } from 'class-validator';

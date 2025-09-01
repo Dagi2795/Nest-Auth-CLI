@@ -8,7 +8,7 @@ export const defaultFields = [
 
 export const availableFeatures = [
   'forgot-password',
-  'atication',
+  'reset-password',
   'otp-email',
   'two-step-verification',
   'delete-account',
